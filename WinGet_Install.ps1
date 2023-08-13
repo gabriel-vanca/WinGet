@@ -33,6 +33,14 @@ if (Get-AppPackage -name "Microsoft.DesktopAppInstaller"){
 } else {
     Write-Host "No existing WinGet installation found. Beginning installation."
 
+    try{
+        Write-Host "Checking for VCLibs package compliance"
+        $VCLibs_installScript =  Invoke-RestMethod https://raw.githubusercontent.com/gabriel-vanca/VCLibs/main/Deploy_MS_VCLibs.ps1
+        Invoke-Expression $VCLibs_installScript
+    } catch {
+        throw "Microsoft.VCLibs.140.00.UWPDesktop installation failure"
+    }
+
     # WinGet usually fails to install in the Windows Sandbox with the this method, but works on Windows Server
     Add-AppxPackage -Path $wingetDownloadPath
 
@@ -66,4 +74,4 @@ if (Get-AppPackage -name "Microsoft.DesktopAppInstaller"){
 
 Write-Host "Installing app updates through winget..."
 winget upgrade --all
-Write-Host "Updates installed."
+Write-Host "WinGet updates installed."
