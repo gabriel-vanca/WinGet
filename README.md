@@ -23,15 +23,13 @@ The script does the following:
 
     2. If it isn't installed yet, it checks whether VCLibs are installed.
 
-    3. If VCLIbs is not installed, it installed it.
+    3. If VCLibs is not installed, it installed it.
 
     4. It install WinGet.
 
     5. Verifies if installation has been succesfull.
 
     4. Updates all WinGet packages
-
-
 
     5. Sets an auto-update configuration
 

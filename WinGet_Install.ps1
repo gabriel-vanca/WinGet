@@ -26,13 +26,25 @@
 $wingetDownloadPath = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
 $wingetLocalDownloadPath = "$env:Temp\winget.msixbundle"
 
-if (Get-AppPackage -name "Microsoft.DesktopAppInstaller"){
+$installationRequired = $False
+$TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
 
-    Write-Host "WinGet is already installed. Skipping installation step." -ForegroundColor Yellow
+if ($TestWinGet){
 
+    #Current: v1.5.1881 = 1.20.1881.0 = 2023.707.2257.0
+    if([Version]$TestWinGet.Version -ge "1.20.1881.0") {
+        Write-Host "WinGet is already installed. Skipping installation step." -ForegroundColor DarkGreen
+        $installationRequired = $False
+    } else {
+        Write-Host "WinGet is already installed, but version is old. Proceeding with installation" -ForegroundColor Yellow
+        $installationRequired = $True
+    }
 } else {
     Write-Host "No existing WinGet installation found. Beginning installation."
+    $installationRequired = $True
+}
 
+if($installationRequired) {
     try{
         Write-Host "Checking for VCLibs package compliance"
         $VCLibs_installScript =  Invoke-RestMethod https://raw.githubusercontent.com/gabriel-vanca/VCLibs/main/Deploy_MS_VCLibs.ps1
@@ -54,7 +66,6 @@ if (Get-AppPackage -name "Microsoft.DesktopAppInstaller"){
         # Download the WinGet install file to $env:Temp
         $WebClient = New-Object System.Net.WebClient
         $WebClient.DownloadFile($wingetDownloadPath, $wingetLocalDownloadPath)
-        # Invoke-WebRequest -uri 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -outfile $env:Temp\winget.msixbundle
         # Install from file
         Add-AppxPackage $wingetLocalDownloadPath
         # Delete install file
