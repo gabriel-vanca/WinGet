@@ -10,7 +10,7 @@
         - Windows Server 2022
         - Windows Server 2022 vNext (Windows Server 2025)
 .EXAMPLE
-    PS> ./WinGet_Install
+    ./WinGet_Install
 .LINK
 	https://github.com/gabrielvanca/WinGet
 .NOTES
