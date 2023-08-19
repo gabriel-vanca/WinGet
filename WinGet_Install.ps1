@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Manually install WinGet
+    Manually installs Winget
 .DESCRIPTION
     Deployment tested on:
         - Windows 10
@@ -10,7 +10,7 @@
         - Windows Server 2022
         - Windows Server 2022 vNext (Windows Server 2025)
 .EXAMPLE
-    ./WinGet_Install
+    ./Winget_Install
 .LINK
 	https://github.com/gabrielvanca/WinGet
 .NOTES
@@ -25,14 +25,12 @@
 
 $wingetDownloadPath = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
 $wingetLocalDownloadPath = "$env:Temp\winget.msixbundle"
+$wingetRequiredVersion = "1.20.1881.0" #Current: v1.5.1881 = 1.20.1881.0 = 2023.707.2257.0
 
 $installationRequired = $False
 $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
-
 if ($TestWinGet){
-
-    #Current: v1.5.1881 = 1.20.1881.0 = 2023.707.2257.0
-    if([Version]$TestWinGet.Version -ge "1.20.1881.0") {
+    if([Version]$TestWinGet.Version -ge $wingetRequiredVersion) {
         Write-Host "WinGet is already installed. Skipping installation step." -ForegroundColor DarkGreen
         $installationRequired = $False
     } else {
@@ -56,7 +54,8 @@ if($installationRequired) {
     # WinGet usually fails to install in the Windows Sandbox with the this method, but works on Windows Server
     Add-AppxPackage -Path $wingetDownloadPath
 
-    if (Get-AppPackage -name "Microsoft.DesktopAppInstaller") {
+    $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
+    if ($TestWinGet -and ([Version]$TestWinGet.Version -ge $wingetRequiredVersion)) {
         winget
         Write-Host "WinGet primary installation succesful" -ForegroundColor DarkGreen
     } else {
@@ -71,7 +70,8 @@ if($installationRequired) {
         # Delete install file
         Remove-Item $wingetLocalDownloadPath
 
-        if (Get-AppPackage -name "Microsoft.DesktopAppInstaller") {
+        $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
+        if ($TestWinGet -and ([Version]$TestWinGet.Version -ge $wingetRequiredVersion)) {
             winget
             Write-Host "WinGet secondary installation method succesful" -ForegroundColor DarkGreen
         } else {
@@ -83,6 +83,3 @@ if($installationRequired) {
     }
 }
 
-Write-Host "Installing app updates through winget..."
-winget upgrade --all
-Write-Host "WinGet updates installed."
