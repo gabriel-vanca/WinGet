@@ -25,7 +25,7 @@
 .EXAMPLE
     ./Winget_Deploy
 .LINK
-	https://github.com/gabrielvanca/WinGet
+	https://github.com/gabrielvanca/Winget
 .NOTES
 	Author: Gabriel Vanca
 #>
