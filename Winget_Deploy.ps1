@@ -99,7 +99,6 @@ Remove-Item $WAU_LocalDownloadPath
 Get-ChildItem $WAU_LocalUnzipPath -recurse | Unblock-File
 
 powershell {
-
     Set-ExecutionPolicy Bypass -Scope Process -Force;
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -110,8 +109,7 @@ powershell {
     } else {
         Write-Host "This session is not running with Administrator priviledges." -ForegroundColor DarkRed    
         Write-Host "Please close this prompt and restart as admin" -ForegroundColor DarkRed
-        Write-Host "This prompt will exit in 60 seconds" -ForegroundColor DarkRed
-        Start-Sleep -Seconds 60
+        Start-Sleep -Seconds 5
         throw "This session is not running with Administrator priviledges."
     }
 
@@ -121,11 +119,16 @@ powershell {
     Set-ExecutionPolicy RemoteSigned -Force
 } 
 
+# Delete unziped files
+Remove-Item $WAU_LocalUnzipPath –recurse
 
 
+Write-Host "Step 3: Installs the WinGet GUI tool"
+
+winget install wingetui
 
 
-
-Write-Host "Installing app updates through winget..."
+Write-Host "Step 4: Installing app updates through winget"
 winget upgrade --all
 Write-Host "WinGet updates installed."
+

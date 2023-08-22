@@ -76,9 +76,8 @@ if($installationRequired) {
             Write-Host "WinGet secondary installation method succesful" -ForegroundColor DarkGreen
         } else {
             Write-Error "WinGet secondary installation failure"
-            Write-Host "This prompt will exit in 20 seconds" -ForegroundColor DarkMagenta
-            Start-Sleep -Seconds 20
-            Exit 1
+            Start-Sleep -Seconds 4
+            throw "WinGet secondary installation failure"
         }
     }
 }
