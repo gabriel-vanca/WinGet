@@ -39,9 +39,9 @@ The script does the following:
 
     1.4. It verifies if installation has been succesfull.
 
-    2. Sets an auto-update configuration through`Winget-AutoUpdate`
+    2. Sets an auto-update configuration through Winget-AutoUpdate
 
-    3. Installs the`WinGet GUI` tool
+    3. Installs the WinGet GUI tool
 
     4. Updates all WinGet packages
 
@@ -68,17 +68,12 @@ You can deploy WinGet manually without the usage of the `Winget_Deploy.ps1` scri
 
 The script does the following:
 
-    1. Checks whether WinGet is already installed.
-
-    2. If it isn't installed yet, it checks whether VCLibs are installed.
-
-    3. If VCLibs is not installed, it installed it.
-
-    4. It install WinGet.
-
-    5. If the primary installation method fails, it used a redundancy method.
-
-    6. Verifies if installation has been successful
+1. Checks whether WinGet is already installed.
+2. If it isn't installed yet, it checks whether VCLibs are installed.
+3. If VCLibs is not installed, it installed it.
+4. It install WinGet.
+5. If the primary installation method fails, it used a redundancy method.
+6. Verifies if installation has been successful
 
 ⚠️The installation of VCLibs, if necessary, is managed by another script I've written and available at: [https://github.com/gabriel-vanca/VCLibs](https://github.com/gabriel-vanca/VCLibs)
 
