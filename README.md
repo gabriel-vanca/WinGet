@@ -11,11 +11,13 @@ This is a guided script to install and config WinGet.
 * ✅Windows Server 2022
 * ✅Windows Server 2022 vNext (Windows Server 2025)
 
-## WinGet Deployment
+## 🚀WinGet Deployment
 
 ```
 ./Winget_Deploy
 ```
+
+⚠️ Make sure you run this using admin priviledges.
 
 The script does the following:
 
@@ -52,7 +54,7 @@ $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel
 Invoke-Expression $deploymentScript
 ```
 
-## Manual Deployment
+## 🔬Manual Deployment
 
 You can deploy WinGet manually without the usage of the `Winget_Deploy.ps1` script. There are two methods for that.
 
