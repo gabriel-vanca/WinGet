@@ -143,7 +143,6 @@ After that, you can install the two WinGet tools (or either of them) by running:
   ```
   .\WAU_Install
   ```
-
   or
 
   ```
