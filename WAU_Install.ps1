@@ -42,7 +42,7 @@ $WAU_LocalUnzipPath = "$env:Temp\WAU"
 
 Write-Host "Setting Execution Policy" -ForegroundColor Magenta
 
-Set-ExecutionPolicy RemoteSigned -Force
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 
 
