@@ -50,7 +50,7 @@ The script does the following:
 If you want to quickly get WinGet and all the other tools deployerd and configured without downloading the script, run the below commands to download and run the script:
 
 ```
-$deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WinGet_Deploy.ps1"
+$deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/Winget_Deploy.ps1"
 Invoke-Expression $deploymentScript
 ```
 
