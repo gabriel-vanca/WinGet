@@ -19,31 +19,20 @@ This is a guided script to install and config WinGet.
 
 ⚠️ Make sure you run this using admin priviledges.
 
-The script does the following:
+**The script does the following:**
 
-    1. Checks whether WinGet is already installed.
-
-    1.1. If it isn't installed yet, it checks whether Chocolatey is installed.
-
-    1.2. If Chocolatey is present, it installs/update via Chocolatey.
-
-    1.3. If Chocolatey is not present, is calls the Winget_Install script to initiate manual installations.
-
-    1.3.1. The script checks if VCLibs is installed.
-
-    1.3.2. If VCLibs is not installed, it installs it.
-
-    1.3.3. It installs WinGet.
-
-    1.3.4. If the primary installation method fails, it used a redundancy method.
-
-    1.4. It verifies if installation has been succesfull.
-
-    2. Sets an auto-update configuration through Winget-AutoUpdate
-
-    3. Installs the WinGet GUI tool
-
-    4. Updates all WinGet packages
+1. Checks whether WinGet is already installed.
+   1. If it isn't installed yet, it checks whether Chocolatey is installed.
+   2. If Chocolatey is present, it installs/update via Chocolatey.
+   3. If Chocolatey is not present, is calls the Winget_Install script to initiate manual installations.
+      1. The script checks if VCLibs is installed.
+      2. If VCLibs is not installed, it installs it.
+      3. It installs WinGet.
+      4. If the primary installation method fails, it used a redundancy method.
+   4. It verifies if installation has been succesfull.
+2. Sets an auto-update configuration through Winget-AutoUpdate
+3. Installs the WinGet GUI tool
+4. Updates all WinGet packages
 
 ### 🌐Networked Install
 
@@ -66,7 +55,7 @@ You can deploy WinGet manually without the usage of the `Winget_Deploy.ps1` scri
 ./WinGet_Install
 ```
 
-The script does the following:
+**The script does the following:**
 
 1. Checks whether WinGet is already installed.
 2. If it isn't installed yet, it checks whether VCLibs are installed.
