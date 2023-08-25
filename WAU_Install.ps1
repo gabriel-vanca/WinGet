@@ -67,8 +67,8 @@ Get-ChildItem $WAU_LocalUnzipPath -Recurse | Unblock-File
 # Running Install/Update Script
 Set-Location $WAU_LocalUnzipPath
 .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+Set-Location ..
 
 # Delete unziped files
-Write-Host "Cleaning temporary files. Standby for deletion."
-Start-Sleep -Seconds 10
+Write-Host "Cleaning temporary files."
 Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
