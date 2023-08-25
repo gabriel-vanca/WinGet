@@ -96,9 +96,10 @@ try {
 # Delete downloaded zip
 Remove-Item $WAU_LocalDownloadPath
 # Unlocking unzipped files (optional)
-Get-ChildItem $WAU_LocalUnzipPath -recurse | Unblock-File
+Get-ChildItem $WAU_LocalUnzipPath -Recurse | Unblock-File
 
 powershell {
+    Set-ExecutionPolicy RemoteSigned -Force
     Set-ExecutionPolicy Bypass -Scope Process -Force;
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -113,19 +114,17 @@ powershell {
         throw "This session is not running with Administrator priviledges."
     }
 
-    Set-Location $WAU_LocalUnzipPath
-    & "Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut"
-
-    Set-ExecutionPolicy RemoteSigned -Force
+    Set-Location "$env:Temp\WAU"
+    .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
 } 
 
 # Delete unziped files
-Remove-Item $WAU_LocalUnzipPath –recurse
+Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
 
 
 Write-Host "Step 3: Installs the WinGet GUI tool"
 
-winget install wingetui
+winget install wingetui --accept-package-agreements --accept-source-agreements
 
 
 Write-Host "Step 4: Installing app updates through winget"
