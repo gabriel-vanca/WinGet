@@ -87,12 +87,13 @@ powershell {
     Invoke-Expression $deploymentScript
 }
 
-Write-Host "Step 3: Installs the WinGet GUI tool"
+
+Write-Host "Step 3: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
 
 winget install wingetui --accept-package-agreements --accept-source-agreements
 
 
-Write-Host "Step 4: Installing app updates through winget"
+Write-Host "Step 4: Installing app updates through winget"  -ForegroundColor DarkBlue
 winget upgrade --all
-Write-Host "WinGet updates installed."
+Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 

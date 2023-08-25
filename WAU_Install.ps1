@@ -72,3 +72,11 @@ Set-Location ..
 # Delete unziped files
 Write-Host "Cleaning temporary files."
 Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
+
+# Check installation presence
+$WingetUpdatePath = "$env:ProgramData\Winget-AutoUpdate"
+if (Test-Path $WingetUpdatePath) {
+    Write-Host "WinGet-AutoUpdate installation presence detection completed succesfully" -ForegroundColor DarkGreen
+} else {
+    Write-Error "WinGet-AutoUpdate installation presence detection failed"
+}
