@@ -2,6 +2,14 @@
 .SYNOPSIS
     Manually installs Winget
 .DESCRIPTION
+    The script does the following:
+    1. Checks whether WinGet is already installed.
+    2. If it isn't installed yet, it checks whether VCLibs are installed.
+    3. If VCLibs is not installed, it installed it.
+    4. It install WinGet.
+    5. If the primary installation method fails, it used a redundancy method.
+    6. Verifies if installation has been successful
+
     Deployment tested on:
         - Windows 10
         - Windows 11
