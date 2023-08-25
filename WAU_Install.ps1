@@ -69,4 +69,6 @@ Set-Location $WAU_LocalUnzipPath
 .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
 
 # Delete unziped files
+Write-Host "Cleaning temporary files. Standby for deletion."
+Start-Sleep -Seconds 10
 Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
