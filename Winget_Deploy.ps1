@@ -94,6 +94,6 @@ winget install wingetui --accept-package-agreements --accept-source-agreements
 
 
 Write-Host "Step 4: Installing app updates through winget"  -ForegroundColor DarkBlue
-winget upgrade --all
+winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
 Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 
