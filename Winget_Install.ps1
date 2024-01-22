@@ -53,7 +53,7 @@ if ($TestWinGet){
 if($installationRequired) {
     try{
         Write-Host "Checking for VCLibs package compliance"
-        $VCLibs_installScript =  Invoke-RestMethod https://raw.githubusercontent.com/gabriel-vanca/VCLibs/main/Deploy_MS_VCLibs.ps1
+        $VCLibs_installScript =  Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/VCLibs/main/Deploy_MS_VCLibs.ps1"
         Invoke-Expression $VCLibs_installScript
     } catch {
         throw "Microsoft.VCLibs.140.00.UWPDesktop installation failure"
