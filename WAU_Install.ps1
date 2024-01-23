@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Installs and configures WinGet
+    Installs and configures Winget-AutoUpdate
 .DESCRIPTION
-    The script will install Winget-AutoUpdate
+    The script will install and configure Winget-AutoUpdate
     (https://github.com/Romanitho/Winget-AutoUpdate)
 
     Deployment tested on:
@@ -26,14 +26,17 @@
 # Force use of TLS 1.2 for all downloads.
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-if($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq $true) {
-    Write-Host "This session is running with Administrator priviledges." -ForegroundColor DarkGreen
-} else {
-    Write-Host "This session is not running with Administrator priviledges." -ForegroundColor DarkRed    
-    Write-Host "Please close this prompt and restart as admin" -ForegroundColor DarkRed
-    Start-Sleep -Seconds 5
-    throw "This session is not running with Administrator priviledges."
+# ($NULL -eq $IsWindows) checks for Windows Sandbox enviroment
+if($IsWindows -or ($NULL -eq $IsWindows)) {
+    $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+    if($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq $true) {
+        Write-Host "This session is running with Administrator priviledges." -ForegroundColor DarkGreen
+    } else {
+        Write-Host "This session is not running with Administrator priviledges." -ForegroundColor DarkRed    
+        Write-Host "Please close this prompt and restart as admin" -ForegroundColor DarkRed
+        Start-Sleep -Seconds 5
+        throw "This session is not running with Administrator priviledges."
+    }
 }
 
 $WAU_WebDownloadPath = "https://github.com/Romanitho/Winget-AutoUpdate/releases/latest/download/WAU.zip"
@@ -65,8 +68,13 @@ Remove-Item $WAU_LocalDownloadPath
 Get-ChildItem $WAU_LocalUnzipPath -Recurse | Unblock-File
 
 # Running Install/Update Script
+$WAUValidInstall = $True
 Set-Location $WAU_LocalUnzipPath
-.\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+try {
+    .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+} catch {
+    $WAUValidInstall = $False
+}
 Set-Location ..
 
 # Delete unziped files
@@ -74,9 +82,11 @@ Write-Host "Cleaning temporary files."
 Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
 
 # Check installation presence
-$WingetUpdatePath = "$env:ProgramData\Winget-AutoUpdate"
-if (Test-Path $WingetUpdatePath) {
+$WAUPath = "$env:ProgramData\Winget-AutoUpdate"
+if (Test-Path $WAUPath -and $WAUValidInstall) {
     Write-Host "WinGet-AutoUpdate installation presence detection completed succesfully" -ForegroundColor DarkGreen
 } else {
     Write-Error "WinGet-AutoUpdate installation presence detection failed"
+    Start-Sleep -Seconds 2
+    throw "WinGet-AutoUpdate installation failed"
 }

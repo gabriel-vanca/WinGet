@@ -39,14 +39,14 @@ $installationRequired = $False
 $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
 if ($TestWinGet){
     if([Version]$TestWinGet.Version -ge $wingetRequiredVersion) {
-        Write-Host "WinGet is already installed. Skipping installation step." -ForegroundColor DarkGreen
+        Write-Host "WinGet is already installed and version is up to date. Skipping installation step." -ForegroundColor DarkGreen
         $installationRequired = $False
     } else {
         Write-Host "WinGet is already installed, but version is old. Proceeding with installation" -ForegroundColor Yellow
         $installationRequired = $True
     }
 } else {
-    Write-Host "No existing WinGet installation found. Beginning installation."
+    Write-Host "No existing WinGet installation found. Beginning installation." -ForegroundColor Yellow
     $installationRequired = $True
 }
 
@@ -56,15 +56,21 @@ if($installationRequired) {
         $VCLibs_installScript =  Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/VCLibs/main/Deploy_MS_VCLibs.ps1"
         Invoke-Expression $VCLibs_installScript
     } catch {
+        Write-Error "Microsoft.VCLibs.140.00.UWPDesktop installation failure"
+        Start-Sleep -Seconds 2
         throw "Microsoft.VCLibs.140.00.UWPDesktop installation failure"
     }
 
     # WinGet usually fails to install in the Windows Sandbox with the this method, but works on Windows Server
-    Add-AppxPackage -Path $wingetDownloadPath
+    try{
+        Add-AppxPackage -Path $wingetDownloadPath
+    } catch {
+        Write-Host "WinGet primary installation failure" -ForegroundColor DarkRed
+    }
 
     $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
     if ($TestWinGet -and ([Version]$TestWinGet.Version -ge $wingetRequiredVersion)) {
-        winget
+        winget -v
         Write-Host "WinGet primary installation succesful" -ForegroundColor DarkGreen
     } else {
         Write-Host "WinGet primary installation failure" -ForegroundColor DarkRed        
@@ -74,13 +80,17 @@ if($installationRequired) {
         $WebClient = New-Object System.Net.WebClient
         $WebClient.DownloadFile($wingetDownloadPath, $wingetLocalDownloadPath)
         # Install from file
-        Add-AppxPackage $wingetLocalDownloadPath
+        try{
+            Add-AppxPackage $wingetLocalDownloadPath
+        } catch {
+            Write-Host "WinGet secondary installation failure" -ForegroundColor DarkRed
+        }
         # Delete install file
         Remove-Item $wingetLocalDownloadPath
 
         $TestWinGet = Get-AppPackage -name "Microsoft.DesktopAppInstaller"
         if ($TestWinGet -and ([Version]$TestWinGet.Version -ge $wingetRequiredVersion)) {
-            winget
+            winget -v
             Write-Host "WinGet secondary installation method succesful" -ForegroundColor DarkGreen
         } else {
             Write-Error "WinGet secondary installation failure"

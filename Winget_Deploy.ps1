@@ -63,7 +63,7 @@ if($installationRequired) {
         $chocoInstallPath = "$Env:ProgramData/chocolatey/choco.exe"
         if (Test-Path "$chocoInstallPath") {
             Write-Host "Using Chocolatey to install/update Winget" -ForegroundColor DarkGreen
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 3
             choco upgrade winget-cli -y
         } else {
             Write-Host "Chocolatey not installed. Recommended method therefore unavailable." -ForegroundColor DarkYellow
@@ -74,6 +74,8 @@ if($installationRequired) {
             Invoke-Expression $deploymentScript
         }
     } catch {
+        Write-Error "Winget installation failure"
+        Start-Sleep -Seconds 2
         throw "Winget installation failure"
     }
 }
