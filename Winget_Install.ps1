@@ -11,12 +11,12 @@
     6. Verifies if installation has been successful
 
     Deployment tested on:
-        - Windows 10
-        - Windows 11
-        - Windows Sandbox
-        - Windows Server 2019
-        - Windows Server 2022
-        - Windows Server 2022 vNext (Windows Server 2025)
+        - ✅Windows 10
+        - ✅Windows 11
+        - ✅Windows 11 Sandbox
+        - ✅Windows Server 2019
+        - ✅Windows Server 2022
+        - ✅Windows Server 2022 vNext (Windows Server 2025)
 .EXAMPLE
     ./WinGet_Install
 .LINK
