@@ -81,21 +81,21 @@ if($installationRequired) {
 }
 
 
-Write-Host "Step 2: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
+# Write-Host "Step 2: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
 
-# Ensure it runs in PowerShell Desktop
-powershell {
-    $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
-    Invoke-Expression $deploymentScript
-}
-
-
-Write-Host "Step 3: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
-
-winget install wingetui --accept-package-agreements --accept-source-agreements
+# # Ensure it runs in PowerShell Desktop
+# powershell {
+#     $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
+#     Invoke-Expression $deploymentScript
+# }
 
 
-Write-Host "Step 4: Installing app updates through winget"  -ForegroundColor DarkBlue
+Write-Host "Step 2: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
+
+winget install -e --id SomePythonThings.WingetUIStore --accept-package-agreements --accept-source-agreements
+
+
+Write-Host "Step 3: Installing app updates through winget"  -ForegroundColor DarkBlue
 winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
 Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 

@@ -77,7 +77,7 @@ Invoke-Expression $deploymentScript
 
 #### Step 2: Install the WinGet Update and GUI tools
 
-After that, you can install the two WinGet tools (or either of them) by running:
+After that, you can install either of the two WinGet tools by running:
 
 * for WinGet-AutoUpdate ([https://github.com/Romanitho/Winget-AutoUpdate](https://github.com/Romanitho/Winget-AutoUpdate)):
 
@@ -96,7 +96,7 @@ After that, you can install the two WinGet tools (or either of them) by running:
 * for WinGetUI ([https://github.com/marticliment/WingetUI](https://github.com/marticliment/WingetUI))
 
   ```
-  winget install wingetui --accept-package-agreements --accept-source-agreements
+  winget install -e --id SomePythonThings.WingetUIStore --accept-package-agreements --accept-source-agreements
   ```
 
 ### 📦Solution 2: Chocolatey Install
@@ -122,7 +122,7 @@ choco install winget-cli -y
 
 #### Step 3: Install the WinGet Update and GUI tools
 
-After that, you can install the two WinGet tools (or either of them) by running:
+After that, you can install either of the two WinGet tools by running:
 
 * for WinGet-AutoUpdate ([https://github.com/Romanitho/Winget-AutoUpdate](https://github.com/Romanitho/Winget-AutoUpdate)):
 
