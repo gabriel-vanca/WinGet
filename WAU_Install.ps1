@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Installs and configures WinGet
+    Installs and configures Winget-AutoUpdate
 .DESCRIPTION
-    The script will install and configure Winget and Winget-AutoUpdate
+    The script will install and configure Winget-AutoUpdate
     (https://github.com/Romanitho/Winget-AutoUpdate)
 
     Deployment tested on:
@@ -68,8 +68,13 @@ Remove-Item $WAU_LocalDownloadPath
 Get-ChildItem $WAU_LocalUnzipPath -Recurse | Unblock-File
 
 # Running Install/Update Script
+$WAUValidInstall = $True
 Set-Location $WAU_LocalUnzipPath
-.\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+try {
+    .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+} catch {
+    $WAUValidInstall = $False
+}
 Set-Location ..
 
 # Delete unziped files
@@ -77,9 +82,11 @@ Write-Host "Cleaning temporary files."
 Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
 
 # Check installation presence
-$WingetUpdatePath = "$env:ProgramData\Winget-AutoUpdate"
-if (Test-Path $WingetUpdatePath) {
+$WAUPath = "$env:ProgramData\Winget-AutoUpdate"
+if (Test-Path $WAUPath -and $WAUValidInstall) {
     Write-Host "WinGet-AutoUpdate installation presence detection completed succesfully" -ForegroundColor DarkGreen
 } else {
     Write-Error "WinGet-AutoUpdate installation presence detection failed"
+    Start-Sleep -Seconds 2
+    throw "WinGet-AutoUpdate installation failed"
 }
