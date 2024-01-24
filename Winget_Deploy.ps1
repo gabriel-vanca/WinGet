@@ -2,27 +2,31 @@
 .SYNOPSIS
     Installs and configures WinGet
 .DESCRIPTION
-    The script will:
-    1. Checks whether WinGet is already installed.
-        1.1. If it isn't installed yet, it checks whether Chocolatey is installed.
-        1.2. If Chocolatey is present, it installs/update via Chocolatey.
-        1.3. If Chocolatey is not present, is calls the Winget_Install script to initiate manual installations.
-            1.3.1. The script checks if VCLibs is installed.
-            1.3.2. If VCLibs is not installed, it installs it.
-            1.3.3. It installs WinGet.
-            1.3.4. If the primary installation method fails, it used a redundancy method.
-        1.4. It verifies if installation has been succesfull.
-    2. Sets an auto-update configuration through Winget-AutoUpdate
-    3. Installs the WinGet GUI tool
-    4. Updates all WinGet packages
+    This is a guided script to install and config WinGet and
+    configures winget packages to auto-update every two days at 10PM.
 
-    Deployment tested on:
-        - Windows 10
-        - Windows 11
-        - Windows Sandbox
-        - Windows Server 2019
-        - Windows Server 2022
-        - Windows Server 2022 vNext (Windows Server 2025)
+    🪟This deployment solution was tested on:
+
+    - ✅Windows 10
+    - ✅Windows 11
+    - ✅Windows 11 Sandbox
+    - ✅Windows Server 2019
+    - ✅Windows Server 2022
+    - ✅Windows Server 2022 vNext (Windows Server 2025)
+
+    **The script does the following:**
+
+    1. Checks whether WinGet is already installed.
+        1. If it isn't installed yet, it checks whether Chocolatey is installed.
+        2. If Chocolatey is present, it installs/update via Chocolatey.
+        3. If Chocolatey is not present, is calls the Winget_Install.ps1 script to initiate manual installations.
+            1. The script checks if VCLibs is installed.
+            2. If VCLibs is not installed, it installs it.
+            3. It installs WinGet.
+            4. If the primary installation method fails, it used a redundancy method.
+        4. It verifies if installation has been succesfull.
+    2. Sets an auto-update configuration through Winget-AutoUpdate
+    3. Updates all WinGet packages
 .EXAMPLE
     ./Winget_Deploy
 .LINK
@@ -81,21 +85,30 @@ if($installationRequired) {
 }
 
 
-# Write-Host "Step 2: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
+# https://github.com/Romanitho/Winget-AutoUpdate
+Write-Host "Step 2: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
 
-# # Ensure it runs in PowerShell Desktop
-# powershell {
-#     $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
-#     Invoke-Expression $deploymentScript
-# }
-
-
-Write-Host "Step 2: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
-
-winget install -e --id SomePythonThings.WingetUIStore --accept-package-agreements --accept-source-agreements
+# Ensure it runs in PowerShell Desktop
+powershell {
+    $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
+    Invoke-Expression $deploymentScript
+}
 
 
-Write-Host "Step 3: Installing app updates through winget"  -ForegroundColor DarkBlue
+# https://github.com/marticliment/WingetUI
+# Write-Host "Step 3: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
+# 
+# winget install -e --id SomePythonThings.WingetUIStore  `
+#                 --accept-package-agreements  `
+#                 --accept-source-agreements   `
+#                 --silent  `
+#                 --disable-interactivity  `
+#                 --override "/NoAutoStart /ALLUSERS /silent /supressmsgboxes /norestart"
+
+
+Write-Host "Step 4: Installing gsudo"  -ForegroundColor DarkBlue
+
+Write-Host "Step 5: Installing app updates through winget"  -ForegroundColor DarkBlue
 winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
 Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 

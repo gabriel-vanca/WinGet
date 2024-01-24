@@ -1,15 +1,29 @@
 # WinGet
 
-This is a guided script to install and config WinGet.
+This is a guided script to install and config WinGet and configures winget packages to auto-update every two days at 10PM.
 
 🪟This deployment solution was tested on:
 
-* ✅ Windows 10
+* ✅Windows 10
 * ✅Windows 11
 * ✅Windows 11 Sandbox
 * ✅Windows Server 2019
 * ✅Windows Server 2022
 * ✅Windows Server 2022 vNext (Windows Server 2025)
+
+**The script does the following:**
+
+1. Checks whether WinGet is already installed.
+   1. If it isn't installed yet, it checks whether Chocolatey is installed.
+   2. If Chocolatey is present, it installs/update via Chocolatey.
+   3. If Chocolatey is not present, is calls the Winget_Install.ps1 script to initiate manual installations.
+      1. The script checks if VCLibs is installed.
+      2. If VCLibs is not installed, it installs it.
+      3. It installs WinGet.
+      4. If the primary installation method fails, it used a redundancy method.
+   4. It verifies if installation has been succesfull.
+2. Sets an auto-update configuration through Winget-AutoUpdate
+3. Updates all WinGet packages
 
 ## 🚀WinGet Deployment
 
@@ -19,126 +33,15 @@ This is a guided script to install and config WinGet.
 
 ⚠️ Make sure you run this using admin priviledges.
 
-**The script does the following:**
-
-1. Checks whether WinGet is already installed.
-   1. If it isn't installed yet, it checks whether Chocolatey is installed.
-   2. If Chocolatey is present, it installs/update via Chocolatey.
-   3. If Chocolatey is not present, is calls the Winget_Install script to initiate manual installations.
-      1. The script checks if VCLibs is installed.
-      2. If VCLibs is not installed, it installs it.
-      3. It installs WinGet.
-      4. If the primary installation method fails, it used a redundancy method.
-   4. It verifies if installation has been succesfull.
-2. Sets an auto-update configuration through Winget-AutoUpdate
-3. Installs the WinGet GUI tool
-4. Updates all WinGet packages
-
 ### 🌐Networked Install
 
 If you want to quickly get WinGet and all the other tools deployerd and configured without downloading the script, run the below commands to download and run the script:
 
 ```
-$deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/Winget_Deploy.ps1"
-Invoke-Expression $deploymentScript
-```
-
-## 🔬Manual Deployment
-
-You can deploy WinGet manually without the usage of the `Winget_Deploy.ps1` script. There are two methods for that.
-
-### ⚒️ Solution 1: Manual Install
-
-#### Step 1: Install WinGet
+# Ensure it runs in PowerShell Desktop
+powershell {
+    $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
+    Invoke-Expression $deploymentScript
+}
 
 ```
-./WinGet_Install
-```
-
-**The script does the following:**
-
-1. Checks whether WinGet is already installed.
-2. If it isn't installed yet, it checks whether VCLibs are installed.
-3. If VCLibs is not installed, it installed it.
-4. It install WinGet.
-5. If the primary installation method fails, it used a redundancy method.
-6. Verifies if installation has been successful
-
-⚠️The installation of VCLibs, if necessary, is managed by another script I've written and available at: [https://github.com/gabriel-vanca/VCLibs](https://github.com/gabriel-vanca/VCLibs)
-
-##### 🌐Networked Install
-
-If you want to quickly get WinGet installed and configured without downloading the script, run the below commands to download and run the script:
-
-```
-$deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WinGet_Install.ps1"
-Invoke-Expression $deploymentScript
-```
-
-#### Step 2: Install the WinGet Update and GUI tools
-
-After that, you can install either of the two WinGet tools by running:
-
-* for WinGet-AutoUpdate ([https://github.com/Romanitho/Winget-AutoUpdate](https://github.com/Romanitho/Winget-AutoUpdate)):
-
-  ```
-  .\WAU_Install
-  ```
-
-  or
-
-  ```
-  powershell { # Ensures it runs in PowerShell Desktop
-      $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
-      Invoke-Expression $deploymentScript
-  }
-  ```
-* for WinGetUI ([https://github.com/marticliment/WingetUI](https://github.com/marticliment/WingetUI))
-
-  ```
-  winget install -e --id SomePythonThings.WingetUIStore --accept-package-agreements --accept-source-agreements
-  ```
-
-### 📦Solution 2: Chocolatey Install
-
-#### Step 1: Install Chocolatey
-
-```
-$scriptPath = "https://raw.githubusercontent.com/gabriel-vanca/Chocolatey/main/Chocolatey_Deploy.ps1"
-$WebClient = New-Object Net.WebClient
-$deploymentScript = $WebClient.DownloadString($scriptPath)
-$deploymentScript = [Scriptblock]::Create($deploymentScript)
-Invoke-Command -ScriptBlock $deploymentScript -ArgumentList ($False, "", "", $False) -NoNewScope
-
-```
-
-For more details, see the Chocolatey repository: [https://github.com/gabriel-vanca/Chocolatey](https://github.com/gabriel-vanca/Chocolatey)
-
-#### Step 2: Install WinGet
-
-```
-choco install winget-cli -y
-```
-
-#### Step 3: Install the WinGet Update and GUI tools
-
-After that, you can install either of the two WinGet tools by running:
-
-* for WinGet-AutoUpdate ([https://github.com/Romanitho/Winget-AutoUpdate](https://github.com/Romanitho/Winget-AutoUpdate)):
-
-  ```
-  .\WAU_Install
-  ```
-  or
-
-  ```
-  powershell { # Ensures it runs in PowerShell Desktop
-      $deploymentScript = Invoke-RestMethod "https://raw.githubusercontent.com/gabriel-vanca/WinGet/main/WAU_Install.ps1"
-      Invoke-Expression $deploymentScript
-  }
-  ```
-* for WinGetUI ([https://github.com/marticliment/WingetUI](https://github.com/marticliment/WingetUI))
-
-  ```
-  choco install wingetui -y
-  ```

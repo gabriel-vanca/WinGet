@@ -45,8 +45,13 @@ $WAU_LocalUnzipPath = "$env:Temp\WAU"
 
 Write-Host "Setting Execution Policy" -ForegroundColor Magenta
 
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-Set-ExecutionPolicy Bypass -Scope Process -Force;
+try{
+    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+} catch {
+    Get-ExecutionPolicy -List
+}
+
+Set-ExecutionPolicy Bypass -Scope Process -Force
 
 
 Write-Host "WinGet-AutoUpdate deployment commenced"  -ForegroundColor DarkGreen
@@ -71,7 +76,15 @@ Get-ChildItem $WAU_LocalUnzipPath -Recurse | Unblock-File
 $WAUValidInstall = $True
 Set-Location $WAU_LocalUnzipPath
 try {
-    .\Winget-AutoUpdate-Install -Silent -UpdatesAtLogon -UpdatesInterval Weekly -InstallUserContext -StartMenuShortcut -DesktopShortcut
+    .\Winget-AutoUpdate-Install  `
+        -Silent  `
+        -UpdatesAtLogon  `
+        -NotificationLevel Full  `
+        -UpdatesInterval BiDaily  `
+        -UpdatesAtTime 10PM  `
+        -InstallUserContext  `
+        -StartMenuShortcut  `
+        -DesktopShortcut
 } catch {
     $WAUValidInstall = $False
 }
@@ -83,7 +96,7 @@ Remove-Item -Path $WAU_LocalUnzipPath -Force -Recurse
 
 # Check installation presence
 $WAUPath = "$env:ProgramData\Winget-AutoUpdate"
-if (Test-Path $WAUPath -and $WAUValidInstall) {
+if ((Test-Path -Path $WAUPath) -and $WAUValidInstall) {
     Write-Host "WinGet-AutoUpdate installation presence detection completed succesfully" -ForegroundColor DarkGreen
 } else {
     Write-Error "WinGet-AutoUpdate installation presence detection failed"
