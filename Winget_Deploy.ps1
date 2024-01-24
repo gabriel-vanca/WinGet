@@ -25,8 +25,8 @@
             3. It installs WinGet.
             4. If the primary installation method fails, it used a redundancy method.
         4. It verifies if installation has been succesfull.
-    2. Sets an auto-update configuration through Winget-AutoUpdate
-    3. Updates all WinGet packages
+    2. Updates all WinGet packages
+    3. Sets an auto-update configuration through Winget-AutoUpdate
 .EXAMPLE
     ./Winget_Deploy
 .LINK
@@ -85,8 +85,13 @@ if($installationRequired) {
 }
 
 
+Write-Host "Step 2: Installing app updates through winget"  -ForegroundColor DarkBlue
+winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
+Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
+
+
 # https://github.com/Romanitho/Winget-AutoUpdate
-Write-Host "Step 2: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
+Write-Host "Step 3: Installing and Configuring WinGet-AutoUpdate"  -ForegroundColor DarkBlue
 
 # Ensure it runs in PowerShell Desktop
 powershell {
@@ -95,8 +100,10 @@ powershell {
 }
 
 
+# Write-Host "Step 4: Installing gsudo"  -ForegroundColor DarkBlue
+
 # https://github.com/marticliment/WingetUI
-# Write-Host "Step 3: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
+# Write-Host "Step 5: Installs the WinGet GUI tool"  -ForegroundColor DarkBlue
 # 
 # winget install -e --id SomePythonThings.WingetUIStore  `
 #                 --accept-package-agreements  `
@@ -106,9 +113,4 @@ powershell {
 #                 --override "/NoAutoStart /ALLUSERS /silent /supressmsgboxes /norestart"
 
 
-Write-Host "Step 4: Installing gsudo"  -ForegroundColor DarkBlue
-
-Write-Host "Step 5: Installing app updates through winget"  -ForegroundColor DarkBlue
-winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
-Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 
