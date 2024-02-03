@@ -86,7 +86,7 @@ if($installationRequired) {
 
 
 Write-Host "Step 2: Installing app updates through winget"  -ForegroundColor DarkBlue
-winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements
+winget upgrade --all --silent --include-unknown --accept-package-agreements --accept-source-agreements
 Write-Host "WinGet updates installed." -ForegroundColor DarkGreen
 
 
